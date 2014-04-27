@@ -1,0 +1,36 @@
+application: passbox
+version: 1
+runtime: go
+api_version: go1
+
+handlers:
+- url: /css
+  static_dir: css
+
+- url: /fonts
+  static_dir: fonts
+
+- url: /img
+  static_dir: img
+
+- url: /js
+  static_dir: js
+
+- url: /min
+  static_dir: min
+
+- url: /roadtest
+  script: _go_app
+  secure: always
+  login: admin
+
+- url: /superuser
+  script: _go_app
+  secure: always
+  login: admin
+  auth_fail_action: unauthorized
+
+- url: /.*
+  script: _go_app
+  secure: always
+  login: required
