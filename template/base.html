@@ -1,12 +1,10 @@
-{{define "base"}}
 <!DOCTYPE html>
 <html>
-  {{template "head" .}}
+  {{.HeadHTML}}
   <body class="metro">
-    {{template "navbar" .}}
+    {{.NavbarHTML}}
     <div class="grid fluid text-center" style="height:510px;background-image:url('/img/safe.png');background-repeat:no-repeat;background-position:center">
-    {{.Content}}
+    {{.ContentHTML}}
     </div>
   </body>
 </html>
-{{end}}
