@@ -1,0 +1,90 @@
+<div class="row"></div>
+<div class="row">
+  <div class="span12">
+    <span class="header">
+      Add your credentials.
+    </span>
+  </div>
+</div>
+<div class="row">
+  <h3 class="text-alert">Tell us what you want to store.</h3>
+</div>
+<form action="add.form" method="POST">
+  <fieldset>
+    <div class="row" id="row1">
+      <div class="span3"></div>
+      <div class="span6 text-left" style="margin-left:65px">
+        <label>Credentials Keys *</label>
+        <!-- credentials key 1 -->
+        <div class="input-control text size3" data-role="input-control">
+          <input type="text" placeholder="e.g. account" id="key1" name="key1">
+          <button class="btn-clear" tabindex="-1" type="button"></button>
+        </div>
+        &nbsp;&nbsp;&nbsp;
+        <!-- credentials key 2 -->
+        <div class="input-control text size3" data-role="input-control">
+          <input type="text" placeholder="e.g. google" id="key2" name="key2">
+          <button class="btn-clear" tabindex="-1" type="button"></button>
+        </div>
+        <label>Username *</label>
+        <div class="input-control text size6" data-role="input-control">
+          <input type="text" placeholder="e.g. hello@email.com" id="username" name="username">
+          <button class="btn-clear" tabindex="-1" type="button"></button>
+        </div>
+        <label>Secret Key *</label>
+        <!-- password 1 -->
+        <div class="input-control password size3" data-role="input-control">
+          <input type="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" id="pw1" name="pw1">
+          <button class="btn-reveal" tabindex="-1" type="button"></button>
+        </div>
+        &nbsp;&nbsp;&nbsp;
+        <!-- password 2 -->
+        <div class="input-control password size3" data-role="input-control">
+          <input type="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" id="pw2" name="pw2">
+          <button class="btn-reveal" tabindex="-1" type="button"></button>
+        </div>
+        <label>Security Questions</label>
+        <!-- security question set 1 -->
+        <div class="input-control text size4" data-role="input-control">
+          <input type="text" placeholder="e.g. where is my hometown?" id="qns1" name="qns1">
+          <button class="btn-clear" tabindex="-1" type="button"></button>
+        </div>
+        &nbsp;&nbsp;&nbsp;
+        <div class="input-control text size2" data-role="input-control">
+          <input type="text" placeholder="e.g. mountain view" id="ans1">
+          <button class="btn-clear" tabindex="-1" type="button"></button>
+        </div>
+        <!-- security question set 2 -->
+        <div class="input-control text size4" data-role="input-control">
+          <input type="text" placeholder="e.g. what is my dog name?" id="qns2" name="qns2">
+          <button class="btn-clear" tabindex="-1" type="button"></button>
+        </div>
+        &nbsp;&nbsp;&nbsp;
+        <div class="input-control text size2" data-role="input-control">
+          <input type="text" placeholder="e.g. puffy" id="ans2" name="ans2">
+          <button class="btn-clear" tabindex="-1" type="button"></button>
+        </div>
+        <!-- security question set 3 -->
+        <div class="input-control text size4" data-role="input-control">
+          <input type="text" placeholder="e.g. what is my mother first name?" id="qns3" name="qns3">
+          <button class="btn-clear" tabindex="-1" type="button"></button>
+        </div>
+        &nbsp;&nbsp;&nbsp;
+        <div class="input-control text size2" data-role="input-control">
+          <input type="text" placeholder="e.g. marie" id="ans3" name="ans3">
+          <button class="btn-clear" tabindex="-1" type="button"></button>
+        </div>
+        <label>Comments</label>
+        <div class="input-control text size6" data-role="input-control">
+          <input type="text" placeholder="e.g. phone verification needed" id="comment" name="comment">
+          <button class="btn-clear" tabindex="-1" type="button"></button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span12">
+        <button class="command-button large primary" onclick="return validation()">Store</button>
+      </div>
+    </div>
+  </fieldset>
+</form>

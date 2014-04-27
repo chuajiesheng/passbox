@@ -74,6 +74,44 @@ func getHello() (out []byte) {
 	return final
 }
 
+func getAdd() (out []byte) {
+	head, error :=
+		parseTemplate(
+		"template/head.html",
+		headContent{Script: template.HTMLAttr("add.js")},
+	)
+	if error != nil {
+		return []byte("Internal server error...")
+	}
+
+	navbar, error :=
+		parseTemplate(
+		"template/navbar.html",
+		navbarContent{User: "Sergey Pimenov"},
+	)
+	if error != nil {
+		return []byte("Internal server error...")
+	}
+
+	content, error :=
+		parseTemplate(
+		"template/add.html",
+		nil)
+	if error != nil {
+		return []byte("Internal server error...")
+	}
+
+	final, error := parseTemplate("template/base.html", baseContent{
+		HeadHTML:    template.HTML(head),
+		NavbarHTML:  template.HTML(navbar),
+		ContentHTML: template.HTML(content)})
+	if error != nil {
+		return []byte("Internal server error...")
+	}
+
+	return final
+}
+
 func handler(w http.ResponseWriter, r *http.Request) {
 	requestURL := r.URL.String()
 
@@ -83,6 +121,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if handleURL(requestURL, "template/add") {
-
+		page := getAdd()
+		w.Write(page)
 	}
 }
