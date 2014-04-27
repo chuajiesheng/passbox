@@ -1,37 +1,11 @@
 {{define "base"}}
 <!DOCTYPE html>
 <html>
-  {{template "head"}}
+  {{template "head" .}}
   <body class="metro">
-    <!-- start navigation bar-->
-    <div class="navigation-bar dark">
-      <div class="navigation-bar-content">
-        <a href="/" class="element">
-          <span class="icon-briefcase"></span>&nbsp;&nbsp;<strong>P</strong>ASSBOX <sub>[for]</sub> <strong>ME</strong> <sub class="text-warning">[PRE-ALPHA]</sub></a>
-
-        <div class="no-tablet-portrait">
-          <span class="element-divider"></span>
-          <a class="element brand" href="#">Home</a>
-          <a class="element brand" href="#">Feedback</a>
-
-          <a class="element brand place-right" href="#">
-            <span class="icon-cog"></span>
-          </a>
-          <span class="element-divider place-right"></span>
-          <a href="/" class="element place-right">
-              <span class="icon-user-2"></span>&nbsp;
-              {{.User}}
-          </a>
-        </div>
-      </div>
-    </div>
-    <!-- end navigation bar-->
-    <script type="text/javascript" src="/js/{{.Script}}"></script>
-
+    {{template "navbar" .}}
     <div class="grid fluid text-center" style="height:510px;background-image:url('/img/safe.png');background-repeat:no-repeat;background-position:center">
-    <!-- start content -->
     {{.Content}}
-    <!-- end content -->
     </div>
   </body>
 </html>
