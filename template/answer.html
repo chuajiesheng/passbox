@@ -1,0 +1,41 @@
+<div class="grid fluid text-center" style="height:510px;background-image:url('img/safe.png');background-repeat:no-repeat;background-position:center">
+  <div class="row"></div>
+  <div class="row">
+    <div class="span12">
+      <span class="header">
+        Our response for you.
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <h3 class="text-alert">Your credentials.</h3>
+  </div>
+  <form>
+    <fieldset>
+      <div class="row" id="row1">
+        <div class="span12">
+          <span class="subheader-secondary" id="credential1">
+            {{.Username}}
+          </span>
+          <span class="subheader" id="stroke">
+            |
+          </span>
+          <span class="subheader-secondary" id="credential2">
+            {{.Password}}
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span12">
+          The credentials will be faded in <span class="text-warning item-title" id="countdown">30</span> seconds.
+        </div>
+        <script type="text/javascript" src="/js/answer.js"></script>
+      </div>
+      <div class="row">
+        <div class="span12">
+          <a class="command-button large primary">Query</a>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
