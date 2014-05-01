@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 )
+
 func Pad(key []byte) []byte {
 	var b []byte
 	b = make([]byte, 32, 32)
