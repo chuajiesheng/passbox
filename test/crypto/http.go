@@ -3,8 +3,8 @@ package crypto
 import (
 	"fmt"
 	"net/http"
+	h "helper"
 )
-import h "helper"
 
 func init() {
 	http.HandleFunc("/test/crypto", handler)
