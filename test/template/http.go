@@ -93,8 +93,18 @@ func getAnswer(h headContent, n navbarContent, a answerContent) (out []byte) {
 	}
 }
 
+func getHome(h headContent, n navbarContent) (out []byte) {
+	content, error := parseTemplate("template/home.html", nil)
+	if error == nil {
+		return generatePage(h, n, content)
+	} else {
+		return []byte("Internal server error...")
+	}
+}
+
 func handler(w http.ResponseWriter, r *http.Request) {
 	requestURL := r.URL.String()
+	var h = headContent{Script: template.HTMLAttr("empty.js")}
 	var n = navbarContent{User: "Sergey Pimenov"}
 
 	if handleURL(requestURL, "template/hello") {
@@ -110,14 +120,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if handleURL(requestURL, "template/answer") {
-		var h = headContent{Script: template.HTMLAttr("empty.js")}
 		var a = answerContent{Username: "HelloWorld@gmail.com", Password: "p@s5W0rd!"}
 		page := getAnswer(h, n, a)
 		w.Write(page)
 	}
 
 	if handleURL(requestURL, "template/home") {
-
+		page := getHome(h, n)
+		w.Write(page)
 	}
 
 	if handleURL(requestURL, "template/query") {
