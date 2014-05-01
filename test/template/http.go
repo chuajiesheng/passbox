@@ -30,6 +30,10 @@ type answerContent struct {
 	Password string
 }
 
+type queryContent struct {
+	CountLeft int
+}
+
 func handleURL(requestURL string, url string) bool {
 	return strings.HasSuffix(requestURL, url)
 }
@@ -70,18 +74,18 @@ func generatePage(h headContent, n navbarContent, content []byte) (out []byte) {
 
 }
 
-func getHello(h headContent, n navbarContent) (out []byte) {
-	content := []byte("<div class=\"row\"><div class=\"span12\"><h1>Hello World</h1></div></div>")
-	return generatePage(h, n, content)
-}
-
-func getAdd(h headContent, n navbarContent) (out []byte) {
-	content, error := parseTemplate("template/add.html", nil)
+func getPlainPage(h headContent, n navbarContent, p string) (out []byte) {
+	content, error := parseTemplate(p, nil)
 	if error == nil {
 		return generatePage(h, n, content)
 	} else {
 		return []byte("Internal server error...")
 	}
+}
+
+func getHello(h headContent, n navbarContent) (out []byte) {
+	content := []byte("<div class=\"row\"><div class=\"span12\"><h1>Hello World</h1></div></div>")
+	return generatePage(h, n, content)
 }
 
 func getAnswer(h headContent, n navbarContent, a answerContent) (out []byte) {
@@ -93,8 +97,8 @@ func getAnswer(h headContent, n navbarContent, a answerContent) (out []byte) {
 	}
 }
 
-func getHome(h headContent, n navbarContent) (out []byte) {
-	content, error := parseTemplate("template/home.html", nil)
+func getQuery(h headContent, n navbarContent, q queryContent) (out []byte) {
+	content, error := parseTemplate("template/query.html", q)
 	if error == nil {
 		return generatePage(h, n, content)
 	} else {
@@ -115,7 +119,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	if handleURL(requestURL, "template/add") {
 		var h = headContent{Script: template.HTMLAttr("add.js")}
-		page := getAdd(h, n)
+		page := getPlainPage(h, n, "template/add.html")
 		w.Write(page)
 	}
 
@@ -126,12 +130,15 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if handleURL(requestURL, "template/home") {
-		page := getHome(h, n)
+		page := getPlainPage(h, n, "template/home.html")
 		w.Write(page)
 	}
 
 	if handleURL(requestURL, "template/query") {
-
+		var q = queryContent{CountLeft: 3}
+		var h = headContent{Script: template.HTMLAttr("query.js")}
+		page := getQuery(h, n, q)
+		w.Write(page)
 	}
 
 	if handleURL(requestURL, "template/setup") {

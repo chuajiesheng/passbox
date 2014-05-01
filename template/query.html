@@ -1,0 +1,35 @@
+<div class="row"></div>
+<div class="row">
+  <div class="span12">
+    <span class="header">
+      Retrieve your password.
+    </span>
+  </div>
+</div>
+<div class="row">
+  <h3 class="text-alert">With the credential key you provided.</h3>
+</div>
+<form action="query.form" method="POST">
+  <fieldset>
+    <div class="row" id="row1">
+      <div class="span12">
+        <div class="input-control size3 text" id="control1" data-role="input-control">
+          <input type="text" id="key1" name="key1" placeholder="e.g. account" autofocus="" onchange="updateUi(this)">
+        </div>
+        <div class="input-control size3 text" id="control1" data-role="input-control">
+          <input type="text" id="key2" name="key2" placeholder="e.g. google" autofocus="" onchange="updateUi(this)">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span12">
+        You have <span class="text-warning item-title" id="remaining">{{.CountLeft}}</span> queries left.
+      </div>
+    </div>
+    <div class="row">
+      <div class="span12">
+        <button class="command-button large primary" onclick="return validation()">Find</button>
+      </div>
+    </div>
+  </fieldset>
+</form>
