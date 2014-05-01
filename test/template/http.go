@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	http.HandleFunc("/test/template/", handler)
+	http.HandleFunc("/roadtest/template/", handler)
 }
 
 func getHello(h e.HeadContent, n e.NavbarContent) (out []byte) {

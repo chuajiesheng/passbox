@@ -7,8 +7,8 @@ import (
 )
 
 func init() {
-	http.HandleFunc("/test/add", root)
-	http.HandleFunc("/test/sign", sign)
+	http.HandleFunc("/roadtest/add", root)
+	http.HandleFunc("/roadtest/sign", sign)
 }
 
 func root(w http.ResponseWriter, r *http.Request) {

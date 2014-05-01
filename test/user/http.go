@@ -10,7 +10,7 @@ import e "entity"
 import h "helper"
 
 func init() {
-	http.HandleFunc("/test/user", handler)
+	http.HandleFunc("/roadtest/user", handler)
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {

@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	http.HandleFunc("/test/hello", handler)
+	http.HandleFunc("/roadtest/hello", handler)
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
