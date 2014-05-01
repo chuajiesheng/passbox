@@ -1,0 +1,62 @@
+<div class="row"></div>
+<div class="row">
+  <div class="span12">
+    <span class="header">
+      Step 1: Let us know more about you.
+    </span>
+  </div>
+</div>
+<div class="row">
+  <h3 class="text-alert">Some question and answer to personalize your passbox!</h3>
+</div>
+<form action="setup.form" method="POST">
+  <fieldset>
+    <div class="row" id="row1">
+      <div class="span12">
+        <div class="input-control text size3" data-role="input-control">
+          <input type="text" id="qns1" name="qns1" placeholder="e.g. i grew up in" onchange="updateUi(this)"></input>
+        </div>
+        <div class="input-control text size3" data-role="input-control">
+          <input type="text" id="ans1" name="ans1" placeholder="e.g. a small fishing village" onchange="updateUi(this)"></input>
+        </div>
+      </div>
+    </div>
+    <div class="row" id="row2">
+      <div class="span12">
+        <div class="input-control text size3" data-role="input-control">
+          <input type="text" id="qns2" name="qns2" placeholder="e.g. my dog favorite food?" onchange="updateUi(this)" disabled="disabled"></input>
+        </div>
+        <div class="input-control text size3" data-role="input-control">
+          <input type="text" id="ans2" name="ans2" placeholder="e.g. jerky" onchange="updateUi(this)" disabled="disabled"></input>
+        </div>
+      </div>
+    </div>
+    <div class="row" id="row3">
+      <div class="span12">
+        <div class="input-control text size3" data-role="input-control">
+          <input type="text" id="qns3" name="qns3" placeholder="e.g. where is my hometown?" onchange="updateUi(this)" disabled="disabled"></input>
+        </div>
+        <div class="input-control text size3" data-role="input-control">
+          <input type="text" id="ans3" name="ans3" placeholder="e.g. mountain view~" onchange="updateUi(this)" disabled="disabled"></input>
+        </div>
+      </div>
+    </div>
+    <div class="row" id="row4">
+      <div class="span12">
+        <div class="input-control text size3" data-role="input-control">
+          <input type="text" id="qns4" name="qns4" placeholder="e.g. my baby name?" disabled="disabled"></input>
+        </div>
+        <div class="input-control text size3" data-role="input-control">
+          <input type="text" id="ans4" name="ans4" placeholder="e.g. boy boy!" disabled="disabled"></input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+    </div>
+    <div class="row">
+      <div class="span12">
+        <button class="command-button large primary">Next</button>
+      </div>
+    </div>
+  </fieldset>
+</form>

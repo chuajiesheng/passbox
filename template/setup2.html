@@ -1,0 +1,38 @@
+<div class="row"></div>
+<div class="row">
+  <div class="span12">
+    <span class="header">
+      Step 2: Secure your <strong>P</strong><small>ASSBOX</small> with a strong password!
+    </span>
+  </div>
+</div>
+<div class="row">
+  <h3 class="text-alert">This password would encrypt and protect your passbox.</h3>
+</div>
+<form action="setup2.form" method="POST">
+  <fieldset>
+    <div class="row" id="row1">
+      <div class="span12">
+        <div class="input-control size4 password" id="control1" data-role="input-control">
+          <input type="password" id="pw1" name="pw1" placeholder="e.g. a very secure password" autofocus="" onchange="updateUi(this)">
+          <button class="btn-reveal" tabindex="-1" type="button"></button>
+        </div>
+      </div>
+    </div>
+    <div class="row" id="row2">
+      <div class="span12">
+        <div class="input-control size4 password" id="control2" data-role="input-control">
+          <input type="password" id="pw2" name="pw2" placeholder="e.g. confirm the above password" autofocus="" onchange="updateUi(this)">
+          <button class="btn-reveal" tabindex="-1" type="button"></button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+    </div>
+    <div class="row">
+      <div class="span12">
+        <button class="command-button large primary" onclick="return validation()">Next</button>
+      </div>
+    </div>
+  </fieldset>
+</form>

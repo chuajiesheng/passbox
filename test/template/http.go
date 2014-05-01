@@ -142,10 +142,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if handleURL(requestURL, "template/setup") {
-
+		var h = headContent{Script: template.HTMLAttr("setup.js")}
+		page := getPlainPage(h, n, "template/setup.html")
+		w.Write(page)
 	}
 
 	if handleURL(requestURL, "template/setup2") {
-
+		var h = headContent{Script: template.HTMLAttr("setup2.js")}
+		page := getPlainPage(h, n, "template/setup2.html")
+		w.Write(page)
 	}
 }
