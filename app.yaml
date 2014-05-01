@@ -21,16 +21,13 @@ handlers:
 
 - url: /roadtest
   script: _go_app
-  secure: always
   login: admin
 
 - url: /superuser
   script: _go_app
-  secure: always
   login: admin
   auth_fail_action: unauthorized
 
 - url: /.*
   script: _go_app
-  secure: always
   login: required
