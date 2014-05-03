@@ -22,12 +22,15 @@ handlers:
 - url: /roadtest
   script: _go_app
   login: admin
+  secure: always
 
 - url: /superuser
   script: _go_app
   login: admin
+  secure: always
   auth_fail_action: unauthorized
 
 - url: /.*
   script: _go_app
   login: required
+  secure: always
