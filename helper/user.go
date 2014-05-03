@@ -33,6 +33,7 @@ func GetNavbarContent(w http.ResponseWriter, r *http.Request) (n e.NavbarContent
 		return e.NavbarContent{User: u.Email, UserLoginURL: template.HTMLAttr("#")}
 	}
 
+	// get redirect login url
 	url, err := user.LoginURL(c, r.URL.String())
 	if err != nil {
 		return e.NavbarContent{User: "Not Logged In", UserLoginURL: template.HTMLAttr("#")}
