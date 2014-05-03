@@ -37,6 +37,6 @@ handlers:
 
 - url: /.*
   script: _go_app
-  login: required
+  login: admin
   secure: always
   auth_fail_action: redirect
