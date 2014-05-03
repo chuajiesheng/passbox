@@ -66,8 +66,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		w.Write(page)
 	}
 
-	if helper.HandleURL(requestURL, "template/home") {
-		page := helper.GetPlainPage(h, n, "template/home.html")
+	if helper.HandleURL(requestURL, "template/index") {
+		page := helper.GetPlainPage(h, n, "template/index.html")
 		w.Write(page)
 	}
 
