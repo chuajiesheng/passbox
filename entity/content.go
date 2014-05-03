@@ -23,6 +23,13 @@ type AnswerContent struct {
 	Password string
 }
 
+type MessageContent struct {
+	Header    string
+	Message   string
+	Link      template.HTMLAttr
+	LinkTitle string
+}
+
 type QueryContent struct {
 	CountLeft int
 }

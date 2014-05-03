@@ -25,6 +25,15 @@ func getAnswer(h e.HeadContent, n e.NavbarContent, a e.AnswerContent) (out []byt
 	}
 }
 
+func getMessage(h e.HeadContent, n e.NavbarContent, m e.MessageContent) (out []byte) {
+	content, error := helper.ParseTemplate("template/message.html", m)
+	if error == nil {
+		return helper.GeneratePage(h, n, content)
+	} else {
+		return []byte("Internal server error...")
+	}
+}
+
 func getQuery(h e.HeadContent, n e.NavbarContent, q e.QueryContent) (out []byte) {
 	content, error := helper.ParseTemplate("template/query.html", q)
 	if error == nil {
@@ -59,6 +68,16 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	if helper.HandleURL(requestURL, "template/home") {
 		page := helper.GetPlainPage(h, n, "template/home.html")
+		w.Write(page)
+	}
+
+	if helper.HandleURL(requestURL, "template/message") {
+		var m = e.MessageContent{
+			Header: "Hello Human!",
+			Message: "Welcome to Passbox!",
+			Link: "/roadtest/template/hello",
+			LinkTitle:"Hello World"}
+		page := getMessage(h, n, m)
 		w.Write(page)
 	}
 
