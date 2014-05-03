@@ -15,7 +15,8 @@ type HeadContent struct {
 }
 
 type NavbarContent struct {
-	User string
+	User         string
+	UserLoginURL template.HTMLAttr
 }
 
 type AnswerContent struct {

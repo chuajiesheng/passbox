@@ -15,7 +15,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	requestURL := r.URL.String()
 	if helper.HandleURL(requestURL, "/") {
 		var h = e.HeadContent{Script: template.HTMLAttr("empty.js")}
-		var n = e.NavbarContent{User: "Login"}
+		var n = helper.GetNavbarContent(w, r)
 		page := helper.GetPlainPage(h, n, "template/index.html")
 		w.Write(page)
 	} else {

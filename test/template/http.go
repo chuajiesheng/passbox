@@ -46,7 +46,7 @@ func getQuery(h e.HeadContent, n e.NavbarContent, q e.QueryContent) (out []byte)
 func handler(w http.ResponseWriter, r *http.Request) {
 	requestURL := r.URL.String()
 	var h = e.HeadContent{Script: template.HTMLAttr("empty.js")}
-	var n = e.NavbarContent{User: "Sergey Pimenov"}
+	var n = e.NavbarContent{User: "Sergey Pimenov", UserLoginURL: "#"}
 
 	if helper.HandleURL(requestURL, "template/hello") {
 		var h = e.HeadContent{Script: template.HTMLAttr("hello.js")}
