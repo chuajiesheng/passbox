@@ -23,6 +23,7 @@ handlers:
   script: _go_app
   login: admin
   secure: always
+  auth_fail_action: redirect
 
 - url: /superuser
   script: _go_app
@@ -38,3 +39,4 @@ handlers:
   script: _go_app
   login: required
   secure: always
+  auth_fail_action: redirect
