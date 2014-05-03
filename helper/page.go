@@ -50,3 +50,23 @@ func GetPlainPage(h e.HeadContent, n e.NavbarContent, p string) (out []byte) {
 		return []byte("Internal server error...")
 	}
 }
+
+func GetMessage(h e.HeadContent, n e.NavbarContent, m e.MessageContent) (out []byte) {
+	content, error := ParseTemplate("template/message.html", m)
+	if error == nil {
+		return GeneratePage(h, n, content)
+	} else {
+		return []byte("Internal server error...")
+	}
+}
+
+func ServeError() (out []byte) {
+	var h = e.HeadContent{Script: template.HTMLAttr("empty.js")}
+	var n = e.NavbarContent{User: "Login"}
+	var m = e.MessageContent{
+		Header: "404: The page is not available.",
+		Message: "Are you looking for something else?",
+		Link: "/",
+		LinkTitle:"Index"}
+	return GetMessage(h, n, m)
+}
