@@ -4,11 +4,14 @@ import (
 	"time"
 )
 
-type Question struct {
-        QuestionID int
-	UserEmail string
-	UserID string
+type QuestionAnswer struct {
 	Question string `datastore:",noindex"`
-	Answer bool `datastore:",noindex"`
+	Answer string `datastore:",noindex"`
+}
+
+type SecurityQuestion struct {
+        UserID string
+	UserEmail string
+	QA []QuestionAnswer `datastore:",noindex"`
         LastEdit time.Time `datastore:",noindex"`
 }

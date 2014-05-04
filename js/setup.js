@@ -7,7 +7,7 @@ function updateUi(element) {
     row = parseInt(element.id.substring(element.id.length - 1, element.id.length));
     qns = getValue('qns' + row);
     ans = getValue('ans' + row);
-    if (qns.length > 1 && ans.length > 1) {
+    if (qns.length > 0 && ans.length > 0) {
         removeDisabled(row + 1)
     }
 }
