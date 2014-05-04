@@ -5,7 +5,6 @@ import (
 	"helper"
 	"html/template"
 	"net/http"
-	"fmt"
 )
 
 func init() {
@@ -22,7 +21,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 
 func formHandler(w http.ResponseWriter, r *http.Request) {
-	_, u := helper.RetrieveUser(w, r)
+	c, u := helper.RetrieveUser(w, r)
 
 	qas := []e.QuestionAnswer{}
 
@@ -34,17 +33,29 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 	sq := helper.CreateSecurityQuestion(*u, qas)
 	key, error := helper.PutSecurityQuestion(r, &sq)
 
-	if error != nil {
-		fmt.Fprintf(w, "err %s\n", error.Error)
+	if error == nil {
+		c.Infof("[page/setup/http.go] Inserted: %s", key)
+		var h = e.HeadContent{Script: template.HTMLAttr("setup2.js")}
+		var n = helper.GetNavbarContent(w, r)
+		page := helper.GetPlainPage(h, n, "template/setup2.html")
+		w.Write(page)
 	} else {
-		fmt.Fprintf(w, "ok [%s] %s\n", key, sq)
+		var h = e.HeadContent{Script: template.HTMLAttr("empty.js")}
+		var n = helper.GetNavbarContent(w, r)
+		var m = e.MessageContent{
+			Header: "Sorry! Something just went wrong.",
+			Message: "Please let me know your question answer again.!",
+			Link: "/setup",
+			LinkTitle:"Security Question"}
+		page := helper.GetMessage(h, n, m)
+		w.Write(page)
 	}
 
 	sq2, err := helper.GetSecurityQuestion(r, (*u).Email)
-	if err != nil {
-		fmt.Fprintf(w, "%s", err.Error())
+	if err == nil {
+		c.Infof("[page/setup/http.go] Retrieved: %s", sq2)
 	} else {
-		fmt.Fprintf(w, "%s", sq2)
+		c.Infof("[page/setup/http.go] Error: %s", err.Error())
 	}
 
 }
