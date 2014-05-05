@@ -1,7 +1,6 @@
 package template
 
 import (
-	"config"
 	e "entity"
 	"helper"
 	"html/template"
