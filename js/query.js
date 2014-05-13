@@ -3,7 +3,7 @@ function validation() {
     var key2 = getValue("key2");
 
     if (key1.length < 1) {
-        notification("Empty field detected!", "Please field in credential key.");
+        notification("Empty field detected!", "Please fill in credential key.");
         return false;
     }
 
