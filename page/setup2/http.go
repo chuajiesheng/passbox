@@ -66,7 +66,25 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 	} else if pw1 != pw2 {
 		showErrorPage(w, r, "Your password does not matched!")
 	} else {
-		// create the entity and encrypt it
+		// generate time-based key
+
+		// hash time-based key
+
+		// generate system key
+
+		// hash system key
+
+		// encrypt system key with time-based key
+
+		// hash encrypted system key
+
+		// store encrypted system key in system-key table under user's email
+
+		// encrypt time-based key with user master key
+
+		// hash encrypted time-based key
+
+		// store encrypted time-based key in time-key table under user's email
 		fmt.Fprintf(w, "%s, %s", pw1, pw2)
 	}
 }
