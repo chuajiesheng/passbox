@@ -9,6 +9,16 @@ import (
 	"io"
 )
 
+func GetRand(len int) []byte {
+	b := make([]byte, len)
+	_, err := rand.Read(b)
+	if err != nil {
+		fmt.Println("error:", err)
+		return nil
+	}
+	return b
+}
+
 func Pad(key []byte) []byte {
 	var b []byte
 	b = make([]byte, 32, 32)
