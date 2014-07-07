@@ -4,10 +4,13 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
 	"io"
 )
+
+const HashSize = sha256.Size
 
 func GetRand(len int) []byte {
 	b := make([]byte, len)
@@ -76,4 +79,8 @@ func decodeBase64(s string) ([]byte, error) {
 		return nil, err
 	}
 	return data, nil
+}
+
+func Sum256(data []byte) [sha256.Size]byte {
+	return sha256.Sum256(data)
 }
