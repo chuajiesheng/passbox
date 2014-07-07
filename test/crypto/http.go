@@ -67,15 +67,19 @@ func test3(w http.ResponseWriter, r *http.Request) {
 func test4(w http.ResponseWriter, r *http.Request) {
 	c := 32
 	key := h.GetRand(c)
-	plaintext := []byte("some really really really long plaintext")
-	fmt.Fprintf(w, "key: %s\n", key)
-	fmt.Fprintf(w, "%s\n", plaintext)
+	plaintext := []byte("some really really long text wor")
+	fmt.Fprintf(w, "key:\t\t %s [%d]\n", key, len(key))
+	fmt.Fprintf(w, "plaintext:\t %s [%d]\n", plaintext, len(plaintext))
 	ciphertext := h.Encrypt(h.Pad(key), plaintext)
-	fmt.Fprintf(w, "%x\n", ciphertext)
+	fmt.Fprintf(w, "ciphertext:\t %x [%d]\n", ciphertext, len(ciphertext))
 	result, err := h.Decrypt(h.Pad(key), ciphertext)
 	if err != nil {
-		fmt.Fprintf(w, "%s\n", "decipher error")
+		fmt.Fprintf(w, "decipher:\t %s\n", "decipher error")
 	} else {
-		fmt.Fprintf(w, "%s\n", result)
+		fmt.Fprintf(w, "decipher:\t %s [%d]\n", result, len(result))
 	}
+
+	mac := h.GenerateMAC(key, plaintext)
+	fmt.Fprintf(w, "mac:\t\t %x [%d]\n", mac, len(mac))
+	fmt.Fprintf(w, "check:\t\t %s\n", h.CheckMAC(plaintext, mac, key))
 }

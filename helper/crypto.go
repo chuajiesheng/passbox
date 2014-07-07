@@ -3,6 +3,7 @@ package helper
 import (
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/hmac"
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/base64"
@@ -83,4 +84,22 @@ func decodeBase64(s string) ([]byte, error) {
 
 func Sum256(data []byte) [sha256.Size]byte {
 	return sha256.Sum256(data)
+}
+
+func GenerateMAC(key []byte, in []byte) []byte {
+	hash := sha256.New
+	mac := hmac.New(hash, key)
+	n, err := mac.Write(in)
+	if n != len(in) || err != nil {
+		panic(err)
+	}
+	return mac.Sum(nil)
+}
+
+// CheckMAC returns true if messageMAC is a valid HMAC tag for message.
+func CheckMAC(message, messageMAC, key []byte) bool {
+	mac := hmac.New(sha256.New, key)
+	mac.Write(message)
+	expectedMAC := mac.Sum(nil)
+	return hmac.Equal(messageMAC, expectedMAC)
 }
