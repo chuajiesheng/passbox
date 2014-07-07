@@ -55,6 +55,14 @@ func meetComplexity(pw string) (m bool) {
 		matchRegex("[:graph:]", pw)
 }
 
+func storeSystemKey(encryptedSystemKey []byte, hashEncryptedSystemKey [helper.HashSize]byte) (res bool) {
+	return false
+}
+
+func storeTimeKey(encryptedTimeKey []byte, hashEncryptedTimeKey [helper.HashSize]byte) (res bool) {
+	return false
+}
+
 func formHandler(w http.ResponseWriter, r *http.Request) {
 	pw1 := r.FormValue("pw1")
 	pw2 := r.FormValue("pw2")
@@ -67,24 +75,37 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 		showErrorPage(w, r, "Your password does not matched!")
 	} else {
 		// generate time-based key
+		c := 32
+		timeKey := helper.GetRand(c)
 
 		// hash time-based key
+		_ = helper.Sum256(timeKey)
 
 		// generate system key
+		systemKey := helper.GetRand(c)
 
 		// hash system key
+		_ = helper.Sum256(systemKey)
 
 		// encrypt system key with time-based key
+		encryptedSystemKey := helper.Encrypt(timeKey, systemKey)
 
 		// hash encrypted system key
+		hashEncryptedSystemKey := helper.Sum256(encryptedSystemKey)
 
 		// store encrypted system key in system-key table under user's email
+		_ = storeSystemKey(encryptedSystemKey, hashEncryptedSystemKey)
 
 		// encrypt time-based key with user master key
+		encryptedTimeKey := helper.Encrypt([]byte(pw1), timeKey)
 
 		// hash encrypted time-based key
+		hashEncryptedTimeKey := helper.Sum256(encryptedTimeKey)
 
 		// store encrypted time-based key in time-key table under user's email
+		_ = storeTimeKey(encryptedTimeKey, hashEncryptedTimeKey)
+
+		// finally
 		fmt.Fprintf(w, "%s, %s", pw1, pw2)
 	}
 }
