@@ -49,14 +49,20 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 	qas = helper.AppendIfValid(qas, r.FormValue("qns3"), r.FormValue("ans3"))
 	qas = helper.AppendIfValid(qas, r.FormValue("qns4"), r.FormValue("ans4"))
 
-	sq := helper.CreateSecurityQuestion(*u, qas)
-	key, error := helper.PutSecurityQuestion(r, &sq)
+	sq, error := helper.CreateSecurityQuestion(*u, qas)
+	if error != nil {
+		showErrorPage(w, r)
+		return
+	}
+	c.Infof("[page/setup/http.go] Security Question: %s", sq)
+	key, error := helper.PutSecurityQuestion(r, sq)
 
 	if error == nil {
 		c.Infof("[page/setup/http.go] Inserted: %s", key)
 		showSetup2Page(w, r)
 	} else {
 		showErrorPage(w, r)
+		return
 	}
 
 	sq2, err := helper.GetSecurityQuestion(r, (*u).Email)
