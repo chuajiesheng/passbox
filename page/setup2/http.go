@@ -21,12 +21,6 @@ func showSetup2Page(w http.ResponseWriter, r *http.Request) {
 	w.Write(page)
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	// check if exist security question
-
-	showSetup2Page(w, r)
-}
-
 func showErrorPage(w http.ResponseWriter, r *http.Request, msg string) {
 	var h = e.HeadContent{Script: template.HTMLAttr("empty.js")}
 	var n = helper.GetNavbarContent(w, r)
@@ -37,6 +31,19 @@ func showErrorPage(w http.ResponseWriter, r *http.Request, msg string) {
 		LinkTitle: "Password Creation"}
 	page := helper.GetMessage(h, n, m)
 	w.Write(page)
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	// check if exist security question
+	c, u := helper.RetrieveUser(w, r)
+	sq, err := helper.GetSecurityQuestion(r, u.Email)
+	if err != nil {
+		c.Infof("[page/setup2/http.go] Error: %s", err.Error())
+		showErrorPage(w, r, "Inconsistent data detected. Please restart the setup process.")
+	} else {
+		c.Infof("[page/setup2/http.go] Retrieved: %s", sq)
+		showSetup2Page(w, r)
+	}
 }
 
 func matchRegex(regex string, pw string) (m bool) {
@@ -55,11 +62,11 @@ func meetComplexity(pw string) (m bool) {
 		matchRegex("[:graph:]", pw)
 }
 
-func storeSystemKey(encryptedSystemKey []byte, hashEncryptedSystemKey [helper.HashSize]byte) (res bool) {
+func storeSystemKey(encryptedSystemKey []byte, macSystemKey []byte) (res bool) {
 	return false
 }
 
-func storeTimeKey(encryptedTimeKey []byte, hashEncryptedTimeKey [helper.HashSize]byte) (res bool) {
+func storeTimeKey(encryptedTimeKey []byte, macTimeKey []byte) (res bool) {
 	return false
 }
 
@@ -74,36 +81,26 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 	} else if pw1 != pw2 {
 		showErrorPage(w, r, "Your password does not matched!")
 	} else {
-		// generate time-based key
 		c := 32
+		// generate time-based key
 		timeKey := helper.GetRand(c)
-
-		// hash time-based key
-		_ = helper.Sum256(timeKey)
-
 		// generate system key
 		systemKey := helper.GetRand(c)
 
-		// hash system key
-		_ = helper.Sum256(systemKey)
-
 		// encrypt system key with time-based key
 		encryptedSystemKey := helper.Encrypt(timeKey, systemKey)
-
-		// hash encrypted system key
-		hashEncryptedSystemKey := helper.Sum256(encryptedSystemKey)
-
-		// store encrypted system key in system-key table under user's email
-		_ = storeSystemKey(encryptedSystemKey, hashEncryptedSystemKey)
-
 		// encrypt time-based key with user master key
 		encryptedTimeKey := helper.Encrypt([]byte(pw1), timeKey)
 
-		// hash encrypted time-based key
-		hashEncryptedTimeKey := helper.Sum256(encryptedTimeKey)
+		// generate MAC for system key
+		macSystemKey := helper.GenerateMAC(timeKey, systemKey)
+		// generate MAC for time-based key
+		macTimeKey := helper.GenerateMAC([]byte(pw1), timeKey)
 
-		// store encrypted time-based key in time-key table under user's email
-		_ = storeTimeKey(encryptedTimeKey, hashEncryptedTimeKey)
+		// store encrypted system key with mac
+		_ = storeSystemKey(encryptedSystemKey, macSystemKey)
+		// store encrypted time key with mac
+		_ = storeTimeKey(encryptedTimeKey, macTimeKey)
 
 		// finally
 		fmt.Fprintf(w, "%s, %s", pw1, pw2)
