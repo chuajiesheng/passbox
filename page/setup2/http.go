@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"regexp"
 	"fmt"
+	s "strconv"
 )
 
 func init() {
@@ -62,8 +63,30 @@ func meetComplexity(pw string) (m bool) {
 		matchRegex("[:graph:]", pw)
 }
 
-func storeSystemKey(encryptedSystemKey []byte, macSystemKey []byte) (res bool) {
-	return false
+func storeSystemKey(w http.ResponseWriter, r *http.Request, encryptedSystemKey []byte, macSystemKey []byte) (res bool) {
+	c, u := helper.RetrieveUser(w, r)
+
+	sk, error := helper.CreateSystemKeyEntity((*u), encryptedSystemKey, macSystemKey)
+	if error != nil {
+		showErrorPage(w, r, "Error in creating system key entity")
+		return
+	}
+
+	key, error := helper.PutSystemKey(r, sk)
+	if error != nil {
+		showErrorPage(w, r, "Error in storing system key entity")
+		return
+	}
+	c.Infof("[page/setup2/http.go] system key: %s", key)
+
+	_, error = helper.GetSystemKey(r, (*u).Email)
+	if error != nil {
+
+	} else {
+
+	}
+
+	return error == nil
 }
 
 func storeTimeKey(encryptedTimeKey []byte, macTimeKey []byte) (res bool) {
@@ -71,6 +94,7 @@ func storeTimeKey(encryptedTimeKey []byte, macTimeKey []byte) (res bool) {
 }
 
 func formHandler(w http.ResponseWriter, r *http.Request) {
+	c, u := helper.RetrieveUser(w, r)
 	pw1 := r.FormValue("pw1")
 	pw2 := r.FormValue("pw2")
 
@@ -81,16 +105,16 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 	} else if pw1 != pw2 {
 		showErrorPage(w, r, "Your password does not matched!")
 	} else {
-		c := 32
+		length := 32
 		// generate time-based key
-		timeKey := helper.GetRand(c)
+		timeKey := helper.GetRand(length)
 		// generate system key
-		systemKey := helper.GetRand(c)
+		systemKey := helper.GetRand(length)
 
 		// encrypt system key with time-based key
 		encryptedSystemKey := helper.Encrypt(timeKey, systemKey)
 		// encrypt time-based key with user master key
-		encryptedTimeKey := helper.Encrypt([]byte(pw1), timeKey)
+		encryptedTimeKey := helper.Encrypt(helper.Pad([]byte(pw1)), timeKey)
 
 		// generate MAC for system key
 		macSystemKey := helper.GenerateMAC(timeKey, systemKey)
@@ -98,11 +122,18 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 		macTimeKey := helper.GenerateMAC([]byte(pw1), timeKey)
 
 		// store encrypted system key with mac
-		_ = storeSystemKey(encryptedSystemKey, macSystemKey)
+		res := storeSystemKey(w, r, encryptedSystemKey, macSystemKey)
 		// store encrypted time key with mac
-		_ = storeTimeKey(encryptedTimeKey, macTimeKey)
+		res2 := storeTimeKey(encryptedTimeKey, macTimeKey)
+
+		c.Infof("[page/setup2/http.go] user, %s; storeSystemKey - %s, storeTimeKey - %s",
+			(*u).Email, s.FormatBool(res), s.FormatBool(res2))
+		if (res == false || res2 == false) {
+
+		}
 
 		// finally
+		fmt.Fprintf(w, "completed: %t, %t\n", res, res2)
 		fmt.Fprintf(w, "%s, %s", pw1, pw2)
 	}
 }
