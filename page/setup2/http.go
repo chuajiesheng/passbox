@@ -34,7 +34,12 @@ func showErrorPage(w http.ResponseWriter, r *http.Request, msg string) {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	// check if exist security question
+	// check if is already registered
+	isRegistered := helper.IsRegisteredUser(w, r)
+	if isRegistered {
+		http.Redirect(w, r, "/login", http.StatusFound)
+	}
+
 	c, u := helper.RetrieveUser(w, r)
 	sq, err := helper.GetSecurityQuestion(r, u.Email)
 	if err != nil {
@@ -135,7 +140,10 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 		// generate system key
 		// encrypt system key with time-based key
 		// store encrypted system key with mac
-		_, encryptedSystemKey, macSystemKey := helper.GenEncryptMAC(length, timeKey)
+		systemKey, encryptedSystemKey, macSystemKey := helper.GenEncryptMAC(length, timeKey)
+		c.Infof("[page/setup2/http.go] system key: %s", systemKey)
+		c.Infof("[page/setup2/http.go] encrypted system key: %s", encryptedSystemKey)
+		c.Infof("[page/setup2/http.go] system key mac: %s", macSystemKey)
 
 		res := storeSystemKey(w, r, encryptedSystemKey, macSystemKey)
 		// store encrypted time key with mac

@@ -13,7 +13,11 @@ func init() {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	// check if exist security question
+	// check if is already registered
+	isRegistered := helper.IsRegisteredUser(w, r)
+	if isRegistered {
+		http.Redirect(w, r, "/login", http.StatusFound)
+	}
 
 	var n = helper.GetNavbarContent(w, r)
 	var h = e.HeadContent{Script: template.HTMLAttr("setup.js")}
