@@ -62,6 +62,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		w.Write(page)
 	}
 
+	if helper.HandleURL(requestURL, "template/login") {
+		page := helper.GetPlainPage(h, n, "template/login.html")
+		w.Write(page)
+	}
+
 	if helper.HandleURL(requestURL, "template/message") {
 		var m = e.MessageContent{
 			Header: "Hello Human!",
