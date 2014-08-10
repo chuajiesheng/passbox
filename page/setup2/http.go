@@ -6,7 +6,6 @@ import (
 	"html/template"
 	"net/http"
 	"regexp"
-	"fmt"
 	s "strconv"
 )
 
@@ -31,6 +30,13 @@ func showErrorPage(w http.ResponseWriter, r *http.Request, msg string) {
 		Link: "/setup2",
 		LinkTitle: "Password Creation"}
 	page := helper.GetMessage(h, n, m)
+	w.Write(page)
+}
+
+func showAddPage(w http.ResponseWriter, r *http.Request) {
+	var h = e.HeadContent{Script: template.HTMLAttr("add.js")}
+	var n = helper.GetNavbarContent(w, r)
+	page := helper.GetPlainPage(h, n, "template/add.html")
 	w.Write(page)
 }
 
@@ -147,11 +153,15 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 		c.Infof("[page/setup2/http.go] user, %s; storeSystemKey - %s, storeTimeKey - %s",
 			(*u).Email, s.FormatBool(res), s.FormatBool(res2))
 		if (res == false || res2 == false) {
-
+			c.Infof("[page/setup2/http.go] store key result: (system = %t), (time = %t)", res, res2)
+			showErrorPage(w, r, "The system is unable to store your new keys!")
+			return
+		} else {
+			// finally, redirect to add page
+			registered := helper.IsRegisteredUser(w, r)
+			c.Infof("[page/setup2/http.go] is registered user: %t", registered)
+			c.Infof("[page/setup2/http.go] redirect to add page")
+			http.Redirect(w, r, "/add", http.StatusFound)
 		}
-
-		// finally
-		fmt.Fprintf(w, "completed: %t, %t\n", res, res2)
-		fmt.Fprintf(w, "%s, %s", pw1, pw2)
 	}
 }
