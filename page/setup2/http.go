@@ -81,16 +81,34 @@ func storeSystemKey(w http.ResponseWriter, r *http.Request, encryptedSystemKey [
 
 	_, error = helper.GetSystemKey(r, (*u).Email)
 	if error != nil {
-
-	} else {
-
+		c.Infof("[page/setup2/http.go] get system key error: %s", error.Error())
 	}
 
 	return error == nil
 }
 
-func storeTimeKey(encryptedTimeKey []byte, macTimeKey []byte) (res bool) {
-	return false
+func storeTimeKey(w http.ResponseWriter, r *http.Request, encryptedTimeKey []byte, macTimeKey []byte) (res bool) {
+	c, u := helper.RetrieveUser(w, r)
+
+	sk, error := helper.CreateTimeKeyEntity((*u), encryptedTimeKey, macTimeKey)
+	if error != nil {
+		showErrorPage(w, r, "Error in creating time key entity")
+		return
+	}
+
+	key, error := helper.PutTimeKey(r, sk)
+	if error != nil {
+		showErrorPage(w, r, "Error in storing time key entity")
+		return
+	}
+	c.Infof("[page/setup2/http.go] time key: %s", key)
+
+	_, error = helper.GetTimeKey(r, (*u).Email)
+	if error != nil {
+		c.Infof("[page/setup2/http.go] get time key error: %s", error.Error())
+	}
+
+	return error == nil
 }
 
 func formHandler(w http.ResponseWriter, r *http.Request) {
@@ -124,7 +142,7 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 		// store encrypted system key with mac
 		res := storeSystemKey(w, r, encryptedSystemKey, macSystemKey)
 		// store encrypted time key with mac
-		res2 := storeTimeKey(encryptedTimeKey, macTimeKey)
+		res2 := storeTimeKey(w, r, encryptedTimeKey, macTimeKey)
 
 		c.Infof("[page/setup2/http.go] user, %s; storeSystemKey - %s, storeTimeKey - %s",
 			(*u).Email, s.FormatBool(res), s.FormatBool(res2))
