@@ -50,14 +50,14 @@ func Encrypt(key, text []byte) []byte {
 	return ciphertext
 }
 
-func Decrypt(key, text []byte) (string, error) {
+func Decrypt(key, text []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	if len(text) < aes.BlockSize {
 		err = fmt.Errorf("decrypt: %s", "ciphertext too short")
-		return "", err
+		return nil, err
 	}
 	iv := text[:aes.BlockSize]
 	text = text[aes.BlockSize:]
@@ -65,9 +65,9 @@ func Decrypt(key, text []byte) (string, error) {
 	cfb.XORKeyStream(text, text)
 	res, err := decodeBase64(string(text))
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return string(res), nil
+	return res, nil
 }
 
 func encodeBase64(b []byte) string {
@@ -102,4 +102,17 @@ func CheckMAC(message, messageMAC, key []byte) bool {
 	mac.Write(message)
 	expectedMAC := mac.Sum(nil)
 	return hmac.Equal(messageMAC, expectedMAC)
+}
+
+func GenEncryptMAC(length int, key []byte) (plaintext []byte, ciphertext []byte, mac []byte) {
+	plaintext = GetRand(length)
+	ciphertext = Encrypt(Pad(key), plaintext)
+	mac = GenerateMAC(key, plaintext)
+	return
+}
+
+func DecryptVerify(key []byte, ciphertext []byte, mac []byte) (plaintext []byte, err error, verified bool) {
+	plaintext, err = Decrypt(Pad(key), ciphertext)
+	verified = CheckMAC(plaintext, mac, key)
+	return
 }
