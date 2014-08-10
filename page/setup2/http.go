@@ -123,22 +123,20 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 		showErrorPage(w, r, "Your password does not matched!")
 	} else {
 		length := 32
+
 		// generate time-based key
-		timeKey := helper.GetRand(length)
-		// generate system key
-		systemKey := helper.GetRand(length)
-
-		// encrypt system key with time-based key
-		encryptedSystemKey := helper.Encrypt(timeKey, systemKey)
 		// encrypt time-based key with user master key
-		encryptedTimeKey := helper.Encrypt(helper.Pad([]byte(pw1)), timeKey)
-
-		// generate MAC for system key
-		macSystemKey := helper.GenerateMAC(timeKey, systemKey)
 		// generate MAC for time-based key
-		macTimeKey := helper.GenerateMAC(helper.Pad([]byte(pw1)), timeKey)
+		timeKey, encryptedTimeKey, macTimeKey := helper.GenEncryptMAC(length, []byte(pw1))
+		c.Infof("[page/setup2/http.go] time key: %s", timeKey)
+		c.Infof("[page/setup2/http.go] encrypted time key: %s", encryptedTimeKey)
+		c.Infof("[page/setup2/http.go] time key mac: %s", macTimeKey)
 
+		// generate system key
+		// encrypt system key with time-based key
 		// store encrypted system key with mac
+		_, encryptedSystemKey, macSystemKey := helper.GenEncryptMAC(length, timeKey)
+
 		res := storeSystemKey(w, r, encryptedSystemKey, macSystemKey)
 		// store encrypted time key with mac
 		res2 := storeTimeKey(w, r, encryptedTimeKey, macTimeKey)
