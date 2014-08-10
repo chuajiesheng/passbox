@@ -46,3 +46,40 @@ func GetSystemKey(r *http.Request, email string) (*e.SystemKey, error) {
 	}
 	return &sk, nil
 }
+
+func CreateTimeKeyEntity(u user.User, encryptedTimeKey []byte, macTimeKey []byte) (*e.TimeKey, error) {
+	if len(encryptedTimeKey) == 0 || len(macTimeKey) == 0 {
+		return nil, errors.New("Empty Time Key and MAC")
+	}
+
+	tk := &e.TimeKey{
+		UserID: u.ID,
+		UserEmail: u.Email,
+		EncryptedTimeKey: encryptedTimeKey,
+		TimeKeyMAC: macTimeKey,
+		LastEdit: time.Now(),
+	}
+	return tk, nil
+}
+
+func PutTimeKey(r *http.Request, tk *e.TimeKey) (*datastore.Key, error) {
+	c := appengine.NewContext(r)
+	key := datastore.NewKey(c, "TimeKey", tk.UserEmail, 0, nil)
+	c.Infof("[helper/key.go] NewKey, TimeKey: %s", key)
+	_, err := datastore.Put(c, key, tk)
+	if err != nil {
+		return nil, err
+	}
+	return key, nil
+}
+
+func GetTimeKey(r *http.Request, email string) (*e.TimeKey, error) {
+	var tk e.TimeKey
+	c := appengine.NewContext(r)
+	key := datastore.NewKey(c, "TimeKey", email, 0, nil)
+	err := datastore.Get(c, key, &tk)
+	if err != nil {
+		return nil, err
+	}
+	return &tk, nil
+}
