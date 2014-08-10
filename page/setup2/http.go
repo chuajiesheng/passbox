@@ -136,7 +136,7 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 		// generate MAC for system key
 		macSystemKey := helper.GenerateMAC(timeKey, systemKey)
 		// generate MAC for time-based key
-		macTimeKey := helper.GenerateMAC([]byte(pw1), timeKey)
+		macTimeKey := helper.GenerateMAC(helper.Pad([]byte(pw1)), timeKey)
 
 		// store encrypted system key with mac
 		res := storeSystemKey(w, r, encryptedSystemKey, macSystemKey)
