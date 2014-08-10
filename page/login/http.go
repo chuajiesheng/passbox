@@ -57,18 +57,21 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// retrieve time-based key entity from datastore
 	tk, error := helper.GetTimeKey(r, (*u).Email)
 	if error != nil {
 		c.Infof("[page/login/http.go] get time key error: %s", error.Error())
 		showErrorPage(w, r, "Unable to retrieve your keys, please contact support.")
 		return
 	}
-
-	c.Infof("[page/login/http.go] time key :%s (%s)", tk.EncryptedTimeKey, tk.TimeKeyMAC)
+	c.Infof("[page/login/http.go] encrypted time key: %s (%s)",
+		tk.EncryptedTimeKey, tk.TimeKeyMAC)
 
 	// decrypt time-based key with user master key
+	// verify integrity time-based key with mac
 	timeKey, error, verified := helper.DecryptVerify([]byte(pw), tk.EncryptedTimeKey, tk.TimeKeyMAC)
 	if error != nil {
+		c.Infof("[page/login/http.go] decrypt time key error: %s", error.Error())
 		showErrorLoginPage(w, r, "The password provided does not match our record.")
 		return
 	}
@@ -78,11 +81,29 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	c.Infof("[page/login/http.go] decrypted time key: %s", timeKey)
 
-	// verify integrity time-based key with mac
+	// retrieve system key entity from datastore
+	sk, error := helper.GetSystemKey(r, (*u).Email)
+	if error != nil {
+		c.Infof("[page/login/http.go] get system key error: %s", error.Error())
+		showErrorPage(w, r, "Unable to retrieve your keys(2), please contract support.")
+		return
+	}
+	c.Infof("[page/login/http.go] encrypted system key: %s (%s)",
+		sk.EncryptedSystemKey, sk.SystemKeyMAC)
 
 	// decrypt system key with time-based key
-
 	// verify integrity system key with mac
+	systemKey, error, verified := helper.DecryptVerify(timeKey, sk.EncryptedSystemKey, sk.SystemKeyMAC)
+	if error != nil {
+		c.Infof("[page/login/http.go] decrypt system key error: %s", error.Error())
+		showErrorLoginPage(w, r, "The password provided does not match our record(2).")
+		return
+	}
+	if verified == false {
+		showErrorLoginPage(w, r, "Unable to verify the integrity of the password(2).")
+		return
+	}
+	c.Infof("[page/login/http.go] decrypted system key: %s", systemKey)
 
 	// generate random number, r
 
