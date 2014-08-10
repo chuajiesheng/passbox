@@ -33,13 +33,6 @@ func showErrorPage(w http.ResponseWriter, r *http.Request, msg string) {
 	w.Write(page)
 }
 
-func showAddPage(w http.ResponseWriter, r *http.Request) {
-	var h = e.HeadContent{Script: template.HTMLAttr("add.js")}
-	var n = helper.GetNavbarContent(w, r)
-	page := helper.GetPlainPage(h, n, "template/add.html")
-	w.Write(page)
-}
-
 func handler(w http.ResponseWriter, r *http.Request) {
 	// check if exist security question
 	c, u := helper.RetrieveUser(w, r)
