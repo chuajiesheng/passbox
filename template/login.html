@@ -1,0 +1,30 @@
+<div class="row"></div>
+<div class="row">
+  <div class="span12">
+    <span class="header">
+      Unlock Passbox
+    </span>
+  </div>
+</div>
+<div class="row">
+  <h3 class="text-alert">Please login with the correct password.</h3>
+</div>
+<form action="login.form" method="POST">
+  <fieldset>
+    <div class="row" id="row1">
+      <div class="span12">
+        <div class="input-control size4 password" id="control1" data-role="input-control">
+          <input type="password" class="text-center" id="password" name="password" placeholder="********" autofocus="" onchange="">
+          <button class="btn-reveal" tabindex="-1" type="button"></button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+    </div>
+    <div class="row">
+      <div class="span12">
+        <button class="command-button large primary" onclick="return validation()">Login</button>
+      </div>
+    </div>
+  </fieldset>
+</form>
